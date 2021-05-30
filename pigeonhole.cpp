@@ -1,0 +1,88 @@
+/* C program to implement Pigeonhole Sort */
+#include <bits/stdc++.h>
+using namespace std;
+
+int maximumGap(vector<int> &nums)
+{
+    int n = nums.size();
+    if (n < 2)
+        return 0;
+
+    int maxx = INT_MIN, minn = INT_MAX;
+    for (int &n : nums)
+    {
+        maxx = max(maxx, n);
+        minn = min(minn, n);
+    }
+
+    int range = maxx - minn + 1;
+    vector<int> holes[range];
+
+    for (int &n : nums)
+        holes[n - minn].push_back(n);
+
+    int ind = 0;
+    for (int i = 0; i < range; i++)
+    {
+        for (auto &v : holes[i])
+        {
+            nums[ind++] = v;
+        }
+    }
+    return 0;
+}
+/* Sorts the array using pigeonhole algorithm */
+void pigeonholeSort(int arr[], int n)
+{
+    // Find minimum and maximum values in arr[]
+    int min = arr[0], max = arr[0];
+    for (int i = 1; i < n; i++)
+    {
+        if (arr[i] < min)
+            min = arr[i];
+        if (arr[i] > max)
+            max = arr[i];
+    }
+    int range = max - min + 1; // Find range
+
+    // Create an array of vectors. Size of array
+    // range. Each vector represents a hole that
+    // is going to contain matching elements.
+    vector<int> holes[range];
+
+    // Traverse through input array and put every
+    // element in its respective hole
+    for (int i = 0; i < n; i++)
+        holes[arr[i] - min].push_back(arr[i]);
+
+    // Traverse through all holes one by one. For
+    // every hole, take its elements and put in
+    // array.
+    int index = 0; // index in sorted array
+    for (int i = 0; i < range; i++)
+    {
+        vector<int>::iterator it;
+        for (it = holes[i].begin(); it != holes[i].end(); ++it)
+            arr[index++] = *it;
+    }
+}
+
+// Driver program to test the above function
+int main()
+{
+    // int arr[] = {8, 3, 2, 7, 4, 6, 8};
+    // int n = sizeof(arr) / sizeof(arr[0]);
+
+    // pigeonholeSort(arr, n);
+
+    // printf("Sorted order is : ");
+    // for (int i = 0; i < n; i++)
+    //     printf("%d ", arr[i]);
+
+    vector<int> nums = {10, 3, 1, 8, 4, 6, 12};
+    maximumGap(nums);
+
+    for(auto &v:nums)
+        cout<<v<<" ";
+    return 0;
+}
